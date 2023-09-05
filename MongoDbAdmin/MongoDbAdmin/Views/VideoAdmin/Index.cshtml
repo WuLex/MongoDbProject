@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "视频后台管理";
+}
+@model IEnumerable<Video>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video CRUD</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/layui/2.6.8/css/layui.css">
+</head>
+<body>
+    <div class="layui-container">
+        <h1>视频管理</h1>
+        <div class="layui-upload">
+            <button type="button" class="layui-btn" id="uploadVideo">Upload Video</button>
+        </div>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>标题</th>
+                    <th>描述</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var video in Model)
+                {
+                    <tr>
+                        <td>@video.Id</td>
+                        <td>@video.Title</td>
+                        <td>@video.Description</td>
+                        <td>
+                            <a class="layui-btn layui-btn-sm" href="/api/videos/@video.Id">Download</a>
+                            <button class="layui-btn layui-btn-danger layui-btn-sm deleteVideo" data-id="@video.Id">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/layui/2.6.8/layui.js"></script>
+    <script>
+        layui.use('upload', function () {
+            var upload = layui.upload;
+            var $ = layui.jquery;
+
+            //上传视频
+            upload.render({
+                elem: '#uploadVideo',
+                ext: 'jpg|png|gif|bmp|jpeg|mp4',
+                accept: "file",
+                url: '/api/videos/upload',
+                done: function (res) {
+                    if (res.code === 200) {
+                        layer.msg(res.msg, { icon: 1 });
+                        location.reload();
+                    } else {
+                        layer.msg(res.msg, { icon: 2 });
+                    }
+                }
+            });
+
+            //删除视频
+            $('.deleteVideo').click(function () {
+                var id = $(this).data('id');
+                layer.confirm('Are you sure to delete this video?', function (index) {
+                    $.ajax({
+                        url: '/api/videos/' + id,
+                        type: 'DELETE',
+                        success: function (res) {
+                            layer.msg(res, { icon: 1 });
+                            location.reload();
+                        },
+                        error: function () {
+                            layer.msg('Failed to delete the video.', { icon: 2 });
+                        }
+                    });
+                    layer.close(index);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

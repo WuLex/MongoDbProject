@@ -1,0 +1,67 @@
+﻿@model List<MongoDbAdmin.Models.Video>
+@{
+    ViewData["Title"] = "Video List";
+}
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        @foreach (var video in Model)
+        {
+            <div class="layui-col-md4">
+                <div class="layui-card">
+                    <div class="layui-card-header">@video.Title</div>
+                    <div class="layui-card-body">
+                        <p>@video.Description</p>
+                        <video id="video-@video.FilePath" controls width="300" height="180">
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                       @* <a class="layui-btn layui-btn-primary layui-btn-sm play-button" href="/VideoWeb/Play/@video.Id">播放</a>*@
+                        <a class="layui-btn layui-btn-primary layui-btn-sm play-button" data-video-id="@video.FilePath">播放</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-sm" id="download-@video.FilePath" href="/VideoWeb/DownloadVideo/@video.FilePath">下载</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    <script>
+        layui.use('jquery', function () {
+            var $ = layui.jquery;
+            $(document).ready(function () {
+
+                $(".play-button").on("click", function () {
+                    var videoId = $(this).data("video-id");
+                    var videoElement = document.getElementById("video-" + videoId);
+
+                    videoElement.src = "/VideoWeb/Play?id=" + videoId;
+                    videoElement.load();
+                    videoElement.play();
+
+                    // 发送AJAX请求获取视频流
+                    //$.ajax({
+                    //    url: "/VideoWeb/Play?id=" + videoId,
+                    //    method: "GET",
+                    //    responseType: "blob", // 添加这一行来指定响应类型为 Blob
+                    //    success: function (data) {
+                    //        if (data) {
+                    //            // 将响应数据转换为 Blob 对象
+                    //            var videoBlob = new Blob([data], { type: "video/mp4" });
+                    //            // 将视频流加载到 <video> 元素中
+                    //            videoElement.src = URL.createObjectURL(videoBlob);
+                    //            videoElement.load();
+                    //            videoElement.play();
+                    //        } else {
+                    //            alert("无法获取视频流。");
+                    //        }
+                    //    },
+                    //    error: function () {
+                    //        alert("发生错误，无法获取视频流。");
+                    //    }
+                    //});
+                });
+            });
+        });
+    </script>
+}
+

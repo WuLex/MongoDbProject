@@ -1,0 +1,36 @@
+﻿@model List<Image>
+
+@{
+    ViewData["Title"] = "Image List";
+}
+
+<h2>Image List</h2>
+
+<table class="layui-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>File Name</th>
+            <th>Content Type</th>
+            <th>FileDataID</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var image in Model)
+        {
+            <tr>
+                <td>@image.Id</td>
+                <td>@image.FileName</td>
+                <td>@image.ContentType</td>
+                <td><img src="data:image/png;base64,@image.FileData"></td>
+                <td>
+                    <a class="layui-btn layui-btn-xs" href="/Image/ViewImage?id=@image.Id">View</a>
+                    <a class="layui-btn layui-btn-xs layui-btn-normal" href="/Image/Edit?id=@image.Id">Edit</a>
+                    <a class="layui-btn layui-btn-xs layui-btn-danger" href="/Image/Delete?id=@image.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a class="layui-btn layui-btn-normal" href="/Image/Create">Upload Image</a>

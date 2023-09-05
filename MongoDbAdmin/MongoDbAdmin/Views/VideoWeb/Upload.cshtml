@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Upload Video";
+}
+
+<div class="layui-card">
+    <div class="layui-card-header">Upload Video</div>
+    <div class="layui-card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div class="layui-form-item">
+                <label class="layui-form-label">Title</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" required lay-verify="required" placeholder="Enter Title" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Video File</label>
+                <div class="layui-input-block">
+                    <input type="file" name="videoStream" required lay-verify="required" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">Upload</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

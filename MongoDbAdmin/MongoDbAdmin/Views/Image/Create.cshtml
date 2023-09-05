@@ -1,0 +1,65 @@
+﻿@model Image
+
+@{
+    ViewData["Title"] = "Create Image";
+}
+
+<h2>Create Image</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="layui-form-item">
+        <label class="layui-form-label">Image File</label>
+        <div class="layui-input-block">
+            <input type="file" name="file" class="layui-upload-file">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn layui-btn-normal">Upload</button>
+        </div>
+    </div>
+</form>
+<script>
+    // layui初始化
+    layui.use(['form', 'upload'], function () {
+        var form = layui.form;
+        var upload = layui.upload;
+
+        // 执行上传组件
+        var uploadInst = upload.render({
+            elem: '.layui-upload-file', // 绑定元素，这里是input[type="file"]的class
+            url: '/YourController/YourAction', // 替换为实际的控制器和操作方法
+            accept: 'images', // 只允许上传图片
+            exts: 'jpg|jpeg|png|gif', // 允许的图片扩展名
+            auto: false, // 不自动上传
+            bindAction: '.layui-btn-normal', // 绑定上传按钮
+            choose: function (obj) {
+                // 文件选择后的回调
+                obj.preview(function (index, file, result) {
+                    // 预览图片
+                    console.log(result); // 这里可以显示预览的图片
+                });
+            },
+            done: function (res) {
+                // 上传完毕回调
+                if (res.code === 0) {
+                    console.log('上传成功');
+                    // 可以在这里执行上传成功后的操作
+                } else {
+                    console.log('上传失败');
+                }
+            },
+            error: function () {
+                // 请求异常回调
+                console.log('上传请求异常');
+            }
+        });
+
+        // 监听表单提交
+        form.on('submit', function (data) {
+            // 手动触发上传事件
+            uploadInst.upload();
+            return false; // 阻止表单跳转
+        });
+    });
+</script>

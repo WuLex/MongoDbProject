@@ -1,0 +1,22 @@
+﻿@model Image
+
+@{
+    ViewData["Title"] = "Edit Image";
+}
+
+<h2>Edit Image</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="@Model.Id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">Image File</label>
+        <div class="layui-input-block">
+            <input type="file" name="file" class="layui-upload-file">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn layui-btn-normal">Update</button>
+        </div>
+    </div>
+</form>
