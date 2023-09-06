@@ -1,0 +1,77 @@
+﻿@model Image
+
+@{
+    ViewData["Title"] = "Create Image";
+}
+
+<h2>Create Image</h2>
+
+<form  class="layui-form layui-form-pane"  asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="layui-form-item">
+        <div class="layui-upload">
+          <button type="button" class="layui-btn" id="uploadfile">预览图片</button>
+          <div class="layui-upload-list">
+            <img class="layui-upload-img" id="demo1" width="500">
+            <p id="demoText"></p>
+          </div>
+          <div style="width: 95px;">
+            <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+              <div class="layui-progress-bar" lay-percent=""></div>
+            </div>
+          </div>
+        </div>   
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-inline">
+            <button type="submit" class="layui-btn layui-btn-normal">上传</button>
+        </div>
+    </div>
+</form>
+ @section Scripts {
+<script>
+    // layui初始化
+    layui.use(['form', 'upload'], function () {
+        var form = layui.form;
+        var upload = layui.upload;
+
+        // 执行上传组件
+        var uploadInst = upload.render({
+            elem: '#uploadfile', // 绑定元素，这里是input[type="file"]的class
+            url: '', 
+            accept: 'images', // 只允许上传图片
+            exts: 'jpg|jpeg|png|gif', // 允许的图片扩展名
+            auto: false, // 不自动上传
+            //bindAction: '.layui-btn-normal', // 绑定上传按钮
+            choose: function (obj) {
+                // 文件选择后的回调
+                obj.preview(function (index, file, result) {
+                    // 预览图片
+                     $('#demo1').attr('src', result); //图片链接（base64）
+                    console.log(result); // 这里可以显示预览的图片
+                });
+            },
+            before: function(obj){
+              //obj.preview(function(index, file, result){
+              //  $('#demo1').attr('src', result); //图片链接（base64）
+              //});
+              element.progress('demo', '0%'); //进度条复位
+              layer.msg('上传中', {icon: 16, time: 0});
+            },
+            done: function (res) {
+                // 上传完毕回调
+                if (res.code === 0) {
+                    console.log('上传成功');
+                    // 可以在这里执行上传成功后的操作
+                } else {
+                    console.log('上传失败');
+                }
+            },
+            error: function () {
+                // 请求异常回调
+                console.log('上传请求异常');
+            }
+        });
+
+    });
+</script>
+}

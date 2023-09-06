@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using MongoDbAdmin.Models;
 using MongoDbAdmin.Services;
+using System;
+using X.PagedList;
 using static System.Net.Mime.MediaTypeNames;
 using Image = MongoDbAdmin.Models.Image;
 
@@ -22,11 +25,13 @@ namespace MongoDbAdmin.Controllers
             _gridFSBucket = new GridFSBucket(_database);
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, int pageSize = 5)
         {
             var images = _database.GetCollection<Image>("Image").Find(new BsonDocument()).ToList();
-           
-            return View(images); 
+
+            var pagedImages = images.ToPagedList(page, pageSize);
+
+            return View(pagedImages);
         }
 
         [HttpGet]
@@ -115,13 +120,23 @@ namespace MongoDbAdmin.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(string id)
         {
-            var objectId = new ObjectId(id);
-            _database.GetCollection<Image>("Image").DeleteOne(i => i.Id == objectId);
-            _gridFSBucket.Delete(objectId);
+            var image = _database.GetCollection<Image>("Image")
+                .Find(i => i.Id == new ObjectId(id))
+                .FirstOrDefault();
+
+            if (image == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _database.GetCollection<Image>("Image").DeleteOne(i => i.Id == new ObjectId(id));
+            }
+
             return RedirectToAction("Index");
         }
 
-        #region Gridfs保存上传的图片
+        #region Gridfs CRUD图片
 
         //public async Task<IActionResult> ViewImage(string id)
         //{
@@ -199,6 +214,16 @@ namespace MongoDbAdmin.Controllers
         //    //return View(images);
         //    return View();
         //}
+
+        //[HttpPost, ActionName("Delete")]
+        //public IActionResult DeleteConfirmed(string id)
+        //{
+        //    var objectId = new ObjectId(id);
+        //    _database.GetCollection<Image>("Image").DeleteOne(i => i.Id == objectId);
+        //    _gridFSBucket.Delete(objectId);
+        //    return RedirectToAction("Index");
+        //}
+
 
         //[HttpDelete]
         //public async Task<IActionResult> DeleteImage(string imageId)

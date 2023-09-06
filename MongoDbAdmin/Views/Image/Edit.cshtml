@@ -6,13 +6,13 @@
 
 <h2>Edit Image</h2>
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data">
+<form  class="layui-form layui-form-pane"  asp-action="Edit" method="post" enctype="multipart/form-data">
     <input type="hidden" name="id" value="@Model.Id">
     <div class="layui-form-item">
         <div class="layui-upload">
-          <button type="button" class="layui-btn" id="test1">上传图片</button>
+          <button type="button" class="layui-btn" id="test1">预览图片</button>
           <div class="layui-upload-list">
-            <img class="layui-upload-img" id="demo1">
+            <img class="layui-upload-img" id="demo1" src="data:image/png;base64,@Model.FileData" width="500">
             <p id="demoText"></p>
           </div>
           <div style="width: 95px;">
@@ -24,13 +24,15 @@
 
     </div>
     <div class="layui-form-item">
-        <div class="layui-input-block">
-            <button type="submit" class="layui-btn layui-btn-normal">Update</button>
+        <div class="layui-input-inline">
+            <button type="submit" class="layui-btn layui-btn-normal">更新图片</button>
         </div>
     </div>
 </form>
 
-<script src="https://cdn.bootcdn.net/ajax/libs/layui/2.6.8/layui.js"></script>
+@*<script src="https://cdn.bootcdn.net/ajax/libs/layui/2.6.8/layui.js"></script>*@
+
+ @section Scripts {
 <script>
     layui.use(['form', 'upload', 'element', 'layer'], function () {
         var form = layui.form,
@@ -43,11 +45,18 @@
             accept: 'images', // 只允许上传图片
             exts: 'jpg|jpeg|png|gif', // 允许的图片扩展名
             auto: false, // 不自动上传
+            choose: function (obj) {
+                // 文件选择后的回调
+                obj.preview(function (index, file, result) {
+                    // 预览图片
+                     $('#demo1').attr('src', result); //图片链接（base64）
+                    console.log(result); // 这里可以显示预览的图片
+                });
+            },
             before: function(obj){
-              obj.preview(function(index, file, result){
-                $('#demo1').attr('src', result); //图片链接（base64）
-              });
-      
+              //obj.preview(function(index, file, result){
+              //  $('#demo1').attr('src', result); //图片链接（base64）
+              //});
               element.progress('demo', '0%'); //进度条复位
               layer.msg('上传中', {icon: 16, time: 0});
             }
@@ -92,11 +101,8 @@
         //    }
         //});
 
-        //监听提交事件
-        form.on('submit(upload)', function (data) {
-            console.log(data.field) //获取提交的表单数据
-            return false; //阻止表单跳转
-        });
     });
 
 </script>
+
+}

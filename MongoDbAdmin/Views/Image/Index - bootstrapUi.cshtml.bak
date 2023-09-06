@@ -1,0 +1,71 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Core; 
+@model IPagedList<Image>
+
+@{
+    ViewData["Title"] = "Image List";
+}
+
+<div class="container">
+    <h2>Image List</h2>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>File Name</th>
+                        <th>Content Type</th>
+                        <th>FileDataID</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var image in Model)
+                    {
+                        <tr>
+                            <td>@image.Id</td>
+                            <td>
+                                <div style="width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    @image.FileName
+                                </div>
+                            </td>
+                            <td>@image.ContentType</td>
+                            <td><img src="data:image/png;base64,@image.FileData" style="max-height: 100px;" /></td>
+                            <td>
+                                <a class="btn btn-sm btn-primary" href="/Image/Edit?id=@image.Id">编辑</a>
+                                <a class="btn btn-sm btn-danger" href="/Image/Delete?id=@image.Id">删除</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <p>共 @Model.TotalItemCount 条</p>
+        </div>
+        <div class="col-md-6">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.HasPreviousPage ? Model.PageNumber - 1 : 1 })">上一页</a>
+                    </li>
+                    <li class="page-item @(Model.PageNumber == Model.PageCount ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.HasNextPage ? Model.PageNumber + 1 : Model.PageNumber })">下一页</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <a class="btn btn-success" href="/Image/Create">添加图片</a>
+        </div>
+    </div>
+</div>

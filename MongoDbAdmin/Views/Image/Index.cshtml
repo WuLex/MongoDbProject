@@ -1,0 +1,64 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Core; 
+@model IPagedList<Image>
+
+@{
+    ViewData["Title"] = "Image List";
+}
+
+<div class="layui-container">
+    <h2>Image List</h2>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>File Name</th>
+                <th>Content Type</th>
+                <th>FileDataID</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var image in Model)
+            {
+                <tr>
+                    <td>@image.Id</td>
+                    <td>
+                        <div class="layui-table-cell" style="width: 300px;" lay-tips="@image.FileName">
+                            @image.FileName
+                        </div>
+                    </td>
+                    <td class="layui-table-cell">@image.ContentType</td>
+                    <td class="layui-table-cell"><img src="data:image/png;base64,@image.FileData" style="max-height: 100px;" /></td>
+                    <td class="layui-table-cell">
+                        <a class="layui-btn layui-btn-normal" href="/Image/Edit?id=@image.Id">编辑</a>
+                        <a class="layui-btn layui-btn-danger" href="/Image/Delete?id=@image.Id">删除</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+     <div class="layui-row">
+        <div class="layui-col-md-12">
+            <div class="layui-box layui-laypage layui-laypage-default">
+                <a class="layui-laypage-prev @(Model.HasPreviousPage ? "" : "layui-disabled")" href="@Url.Action("Index", new { page = Model.HasPreviousPage ? Model.PageNumber - 1 : 1 })">上一页</a>
+                <div class="layui-laypage-count" style="display: inline-block;">
+                    <span>共 @Model.TotalItemCount 条</span>
+                    <span>每页 @Model.PageSize 条</span>
+                    <span>当前第 @Model.PageNumber 页</span>
+                </div>
+                <a class="layui-laypage-next @(Model.HasNextPage ? "" : "layui-disabled")" href="@Url.Action("Index", new { page = Model.HasNextPage ? Model.PageNumber + 1 : Model.PageNumber })">下一页</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-row">
+        <div class="layui-col-md-3">
+            <a class="layui-btn layui-btn-normal" href="/Image/Create">添加图片</a>
+        </div>
+    </div>
+</div>

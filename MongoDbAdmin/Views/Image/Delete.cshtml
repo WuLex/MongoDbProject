@@ -1,0 +1,77 @@
+﻿@model Image
+
+@{
+    ViewData["Title"] = "Delete Image";
+}
+<h2>Delete Image</h2>
+
+<div class="layui-form-item">
+    <label class="layui-form-label">ID</label>
+    <div class="layui-input-block">
+        <input type="text" value="@Model.Id" readonly class="layui-input">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">File Name</label>
+    @*<div class="layui-input-block">
+        <input type="text" value="@Model.FileName" readonly>
+    </div>*@
+    <div class="layui-input-block">
+        <input type="text" value="@Model.FileName" readonly class="layui-input"> 
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">图片预览</label>
+    <div class="layui-input-block">
+        <img class="layui-upload-img" src="data:image/png;base64,@Model.FileData" width="500">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">Content Type</label>
+    <div class="layui-input-block">
+        <input type="text" value="@Model.ContentType" readonly class="layui-input">
+    </div>
+</div>
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <form asp-action="Delete" method="post">
+            <input type="hidden" name="id" value="@Model.Id">
+            <button type="submit" class="layui-btn layui-btn-danger">删除</button>
+            <a class="layui-btn layui-btn-normal" href="/Image/Index">返回列表页</a>
+        </form>
+    </div>
+</div>
+
+
+@*<script src="https://cdn.jsdelivr.net/npm/layui@2.6.8/dist/layui.js"></script>*@
+ @section Scripts {
+<script>
+    //layui.use('form', function () {
+    //    var form = layui.form;
+
+    //    form.render();
+
+    //    form.on('submit', function (data) {
+    //        $.ajax({
+    //            url: '/Image/DeleteConfirmed',
+    //            type: 'POST',
+    //            data: data.field, 
+    //            success: function (response) {
+    //                if (response.success) {
+    //                    window.location.href = '/Image/Index';
+    //                } else {
+    //                    alert('删除图像时出错');
+    //                }
+    //            },
+    //            error: function () {
+    //                alert('删除图像时出错');
+    //            }
+    //        });
+
+    //        // 阻止默认表单提交
+    //        return false;
+    //    });
+    //});
+</script>
+
+}
